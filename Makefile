@@ -22,6 +22,7 @@ info:
 
 clean:
 	@find . -name "*.pyc" -delete
+	@rm -rf .tox/*-$(PLATFORM) .tox/docs dist/* .tox/dist .tox/log docs/build/*
 
 package:
 	python setup.py sdist bdist_wheel build_sphinx

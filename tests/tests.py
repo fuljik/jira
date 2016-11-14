@@ -230,17 +230,18 @@ class JiraTestManager(object):
                 """
                 user = re.sub("[^A-Z_]", "", getpass.getuser().upper())
 
+                def hashify(some_string, max_len=8):
+                    return hashlib.md5(some_string.encode('utf-8')).hexdigest()[:8].upper()
+
                 if user == 'TRAVIS' and 'TRAVIS_JOB_NUMBER' in os.environ:
                     # please note that user underline (_) is not suppored by
                     # jira even if is documented as supported.
-                    self.jid = 'T' + hashlib.md5(user + os.environ['TRAVIS_JOB_NUMBER'])[:8]
-
-                    user + os.environ['TRAVIS_JOB_NUMBER'].replace('.', 'V')
+                    self.jid = 'T' + hashify(user + os.environ['TRAVIS_JOB_NUMBER'])
                 else:
                     identifier = user + \
                         chr(ord('A') + sys.version_info[0]) + \
                         chr(ord('A') + sys.version_info[1])
-                    self.jid = 'Z' + hashlib.md5(identifier.encode('utf-8')).hexdigest()[:8].upper()
+                    self.jid = 'Z' + hashify(identifier)
 
                 self.project_a = self.jid + 'A'  # old XSS
                 self.project_a_name = "Test user=%s key=%s A" \
